@@ -1,0 +1,47 @@
+body {
+  padding-top: 60px;
+}
+
+.space {
+	margin-top: 40px;
+}
+
+.section-title {
+	font-weight: 800;
+	text-transform: uppercase;
+	border-bottom: 2px solid;
+	padding-bottom: 10px;
+	margin-bottom: 40px;
+	font-size: 18px;
+}
+
+textarea {
+	resize: none;
+}
+
+.btn-new {
+	margin: 17.5px 20px 0 0 !important;
+}
+
+.btn-back {
+	margin-left: 10px;
+	top: 2px;
+	position: relative;
+}
+
+.glyphicon-floppy-disk {
+	top: 3px;
+	left: 1px;
+}
+
+.badge {
+	width: 18px;
+	height: 18px;
+	top: -10px;
+	position: relative;
+	left: -10px;
+	font-weight: bold;
+	font-size: 10px;
+	line-height: 12px;
+	background: #ff9800;
+}

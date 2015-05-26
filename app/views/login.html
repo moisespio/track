@@ -1,0 +1,31 @@
+<div class="login">
+	<div class="row">
+		<div class="col-md-12">
+			<form ng-submit="login()">
+				<div class="alert alert-danger" ng-show="error">
+					<button type="button" class="close" ng-click="error = false">×</button>
+					Parece que os dados que você inseriu não estão corretos. Caso o problema continue, tente <a href="#" class="alert-link">redefinir sua senha</a>.
+				</div>
+
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Usuário" required="" ng-model="username">
+				</div>
+				<div class="form-group">
+					<input type="password" class="form-control" placeholder="Senha" required="" ng-model="password">
+				</div>
+				<button class="btn btn-primary btn-login" ng-disabled="loading">Entrar</button>
+				<a href="#" class="btn-forgot">
+					<small>Esqueceu sua senha?</small>
+				</a>
+
+				<hr>
+
+				<p class="text-muted text-center help">
+					<small>Ainda não possui uma conta?</small>
+				</p>
+
+				<a class="btn btn-create btn-primary btn-block" href="./register">Registrar</a>
+			</form>
+		</div>
+	</div>
+</div>
