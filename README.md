@@ -10,13 +10,10 @@
 ### Instalação ###
 
 Primeiramente, baixar e instalar o [NodeJS](http://nodejs.org/).
-Logo após, instalar o Grunt executando o seguinte comando no terminal:
 
-`npm install -g grunt-cli`
+No terminal, navegar até a pasta onde o boilerplate está localizado.
 
-Ainda no terminal, navegar até a pasta onde o boilerplate está localizado.
-
-`cd ~/web/boilerplate`
+`cd ~/web/track`
 
 Executar o seguinte comando:
 
@@ -24,7 +21,7 @@ Executar o seguinte comando:
 
 Depois disso, basta executar o Grunt:
 
-`grunt dev`
+`gulp watch`
 
 ### Estrutura ###
 
