@@ -1,0 +1,42 @@
+.new-notification {
+	margin-bottom: 20px;
+}
+.notifications {
+	.control-label {
+		display: block;
+	}
+	.checkbox, .radio {
+		display: inline-block;
+		margin-right: 10px;
+	}
+}
+
+.modal.fade .modal-dialog {
+    transform: translate(-50%, -80%);
+}
+
+.modal.in .modal-dialog {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 0px;
+}
+.modal-content {
+	border-radius: 6px !important;
+}
+.twitter-typeahead {
+	width: 100%;
+	.tt-menu {
+		width: 100%;
+		border: 1px solid rgb(221, 221, 221);
+		padding: 10px;
+		border-top: 0;
+		background: white;
+		.tt-suggestion {
+			&.tt-cursor {
+				color: #2196F3;
+			}
+		}
+	}
+}

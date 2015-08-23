@@ -1,0 +1,52 @@
+<form action="" ng-submit="save($event)">
+	<div class="container space">
+		<div class="row">
+			<div class="col-sm-8">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Informações Básicas</h3>
+					</div>
+					<div class="panel-body">
+						<div class="form-group">
+							<label class="control-label" for="subject">Assunto</label>
+							<input type="text" class="form-control" ng-model="subject" id="subject" placeholder="Descreva em poucas palavras o assunto deste registro">
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="message">Descrição</label>
+							<textarea class="form-control" ng-model="description" rows="3" id="message"></textarea>
+						</div>
+						<div class="form-group">
+							<label class="control-label" ng-model="date" for="date">Data</label>
+							<input type="text" class="form-control" id="date" placeholder="DD/MM/AAAA" value="{{ date | date:'dd/MM/yyyy' }}" disabled>
+						</div>
+						<div class="form-group">
+							<div ngf-select="" ng-model="files" ngf-change="upload($files)" class="btn btn-sm btn-primary btn-upload" ngf-multiple="false">Selecionar Arquivo</div>
+							<span class="filename">{{ filename }}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Outras Informações</h3>
+					</div>
+					<div class="panel-body">
+						<div class="form-group">
+							<label class="control-label" for="date">Categoria</label>
+							<select class="form-control" id="select">
+								<option>Orientação</option>
+								<option>Arquivo</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<button class="btn btn-big btn-success">Salvar</button>
+			</div>
+		</div>
+	</div>
+</form>
