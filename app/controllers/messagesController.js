@@ -1,22 +1,12 @@
-app.controller('notificationsController', function($http, $rootScope, $scope, $location) {
-	$rootScope.currentSection = 'notifications';
+app.controller('messagesController', function($http, $rootScope, $scope, $location) {
+	$rootScope.currentSection = 'messages';
 	$scope.filter = 'received';
+	$scope.showSuccessMessage = false;
 	$scope.selected = {};
 
-	function objectsAreSame(x, y) {
-		var objectsAreSame = true;
-		for(var propertyName in x) {
-			if(x[propertyName] !== y[propertyName]) {
-				objectsAreSame = false;
-				break;
-			}
-		}
-		return objectsAreSame;
-	}
-
 	$scope.send = function() {
-		var selectedUsers = $.grep($scope.students, function(student) {
-			return $scope.selected[student.attributes.name];
+		var selectedUsers = $.grep($scope.users, function(user) {
+			return $scope.selected[user.attributes.name];
 		});
 
 		// var selectedGroups = $.grep($scope.groups, function(group) {
@@ -62,7 +52,11 @@ app.controller('notificationsController', function($http, $rootScope, $scope, $l
 
 		Parse.Object.saveAll(messages, {
 			success: function(message) {
-
+				$('#new-notification').modal('hide');
+				$scope.$apply(function () {
+					$scope.showSuccessMessage = true;
+				});
+				loadMessages();
 			},
 			error: function(message, error) {
 				alert('Failed to create new object, with error code: ' + error.message);
@@ -70,16 +64,21 @@ app.controller('notificationsController', function($http, $rootScope, $scope, $l
 		});
 	}
 
-	$scope.students = new Array();
+	$scope.users = new Array();
 
 	var query = new Parse.Query(Parse.User);
-	query.equalTo('teacherId', $rootScope.currentUser);
+
+	if ($rootScope.currentUser.attributes.type == 'teacher') {
+		query.equalTo('teacherId', $rootScope.currentUser);
+	} else {
+		query.equalTo('objectId', $rootScope.currentUser.attributes.teacherId.id);
+	}
 
 	query.find({
 		success: function(results) {
 			for (item in results) {
 				$scope.$apply(function () {
-					$scope.students.push(results[item]);
+					$scope.users.push(results[item]);
 				})
 			}
 		},
@@ -107,26 +106,49 @@ app.controller('notificationsController', function($http, $rootScope, $scope, $l
 		}
 	});
 
-	$scope.messages = new Array();
-	var Message = Parse.Object.extend('Message');
-	var query = new Parse.Query(Message);
-	query.equalTo('receiverId', $rootScope.currentUser);
-	var query = new Parse.Query(Message);
-	query.equalTo('senderId', $rootScope.currentUser);
-	query.include('receiverId');
-	query.include('senderId');
+	function loadMessages() {
+		$scope.received = new Array();
+		$scope.sent = new Array();
 
-	query.find({
-		success: function(results) {
-			console.log("results:", results)
-			for (item in results) {
-				$scope.$apply(function () {
-					$scope.messages.push(results[item]);
-				})
+		var Message = Parse.Object.extend('Message');
+		var query = new Parse.Query(Message);
+		query.equalTo('receiverId', $rootScope.currentUser);
+
+		query.include('receiverId');
+		query.include('senderId');
+
+		query.find({
+			success: function(results) {
+				for (item in results) {
+					$scope.$apply(function () {
+						$scope.received.push(results[item]);
+					})
+				}
+			},
+			error: function(error) {
+				alert('Error when getting objects!');
 			}
-		},
-		error: function(error) {
-			alert('Error when getting objects!');
-		}
-	});
+		});
+
+		var query = new Parse.Query(Message);
+		query.equalTo('senderId', $rootScope.currentUser);
+
+		query.include('receiverId');
+		query.include('senderId');
+
+		query.find({
+			success: function(results) {
+				for (item in results) {
+					$scope.$apply(function () {
+						$scope.sent.push(results[item]);
+					})
+				}
+			},
+			error: function(error) {
+				alert('Error when getting objects!');
+			}
+		});
+	}
+
+	loadMessages();
 });

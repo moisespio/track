@@ -2,15 +2,23 @@ app.controller('timelineController', function($http, $rootScope, $scope, $locati
 	if (!$rootScope.currentUser) $location.path('/login');
 
 	$scope.posts = new Array();
+	$scope.users = new Array();
+	$scope.selectedUser = new Array();
 	$rootScope.currentSection = 'dashboard';
+
+	var all = { id : 0, attributes : { name : 'Todos' } };
+
+	$scope.$watch('selectedUser', function (selectedUser) {
+		console.log("selectedUser:", selectedUser);
+	});
 
 	var posts = new Parse.Query(Parse.Object.extend('Post'));
 	var users = new Parse.Query(Parse.User);
+	posts.include('userId');
 
 	var getPosts = function () {
 		posts.find({
 			success : function (results) {
-				console.log("results:", results);
 				for (item in results) {
 					$scope.$apply(function () {
 						$scope.posts.push(results[item]);
@@ -30,6 +38,16 @@ app.controller('timelineController', function($http, $rootScope, $scope, $locati
 
 		users.find({
 			success : function (results) {
+				for (item in results) {
+					$scope.$apply(function () {
+						if (item == 0) {
+							$scope.users.push(all);
+							$scope.selectedUser = all;
+						}
+						$scope.users.push(results[item]);
+					})
+				}
+
 				posts.containedIn('userId', results);
 				getPosts();
 			},

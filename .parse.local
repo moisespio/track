@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "Track": {
+      "applicationId": "SpAKGJzQmYBe1swWZnXzxX5JBJJD0Q8ajk54MQi2"
+    },
+    "_default": {
+      "link": "Track"
+    }
+  }
+}

@@ -5900,6 +5900,9 @@ body {
 .space {
   margin-top: 40px; }
 
+.alert-dismissable .close, .alert-dismissible .close {
+  top: -3px; }
+
 .section-title {
   font-weight: 800;
   text-transform: uppercase;
@@ -6112,6 +6115,9 @@ textarea {
   display: inline-block;
   margin-right: 10px; }
 
+tr.new {
+  font-weight: bold; }
+
 .modal.fade .modal-dialog {
   -webkit-transform: translate(-50%, -80%);
       -ms-transform: translate(-50%, -80%);
@@ -6142,3 +6148,6 @@ textarea {
 
 table td {
   vertical-align: middle !important; }
+
+.message {
+  margin-top: 40px; }

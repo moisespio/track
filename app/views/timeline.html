@@ -1,6 +1,19 @@
+<div class="container-fluid well filter" ng-show="currentUser.attributes.type == 'teacher'">
+	<div class="container">
+		<div class="row">
+			<div class="form-group">
+				<div class="col-md-4">
+					<select class="form-control" ng-model="selectedUser" ng-options="user.attributes.name for user in users track by user.id" id="select">
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="container">
 	<ul class="timeline">
-		<li ng-repeat="post in posts | orderBy:'-createdAt'" ng-class-even="'timeline-inverted'">
+		<li ng-repeat="post in posts | orderBy:'-createdAt' | filter:selectedUser.id" ng-class-even="'timeline-inverted'">
 			<div class="timeline-badge primary">
 				<i class="glyphicon glyphicon-floppy-disk" ng-if="post.attributes.file"></i>
 				<i class="glyphicon glyphicon-align-left" ng-if="!post.attributes.file"></i>
@@ -11,7 +24,7 @@
 					<h4 class="timeline-title">{{ post.attributes.subject }}</h4>
 					<p>
 						<small class="text-muted user-name">
-							<i class="glyphicon glyphicon-user"></i> {{ post.attributes.userId.cid }}
+							<i class="glyphicon glyphicon-user"></i> {{ post.attributes.userId.attributes.name }}
 						</small>
 						<small class="text-muted">
 							<i class="glyphicon glyphicon-calendar"></i> {{ post.createdAt | date : 'dd/MM/yyyy' }}

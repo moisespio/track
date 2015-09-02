@@ -1,4 +1,12 @@
 <div class="container space">
+	<div class="row" ng-show="showSuccessMessage">
+		<div class="col-md-12">
+			<div class="alert alert-dismissible alert-success">
+				<button type="button" class="close" ng-click="showSuccessMessage = false">×</button>
+				{{ successMessage }}
+			</div>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-md-4">
 			<div class="panel panel-default">
@@ -25,13 +33,15 @@
 							<tr>
 								<th>Matrícula</th>
 								<th>Aluno</th>
+								<th>Grupo</th>
 								<th>Ações</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="student in students">
 								<td>{{ student.attributes.username }}</td>
-								<td><a href="./student">{{ student.attributes.name }}</a></td>
+								<td><a href="./student/{{ student.id }}">{{ student.attributes.name }}</a></td>
+								<td><a href="./group/{{ student.attributes.groupId.id }}">{{ student.attributes.groupId.attributes.title }}</a></td>
 								<td>
 									<div class="btn-group">
 										<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -40,9 +50,10 @@
 										<ul class="dropdown-menu" role="menu">
 											<li><a href="#">Ver histórico</a></li>
 											<li><a href="#">Enviar notificação</a></li>
+											<li><a href="#" ng-if="filter == 'my'">Desativar</a></li>
 											<li class="divider"></li>
-											<li><a href="#">Orientar</a></li>
-											<li><a href="#">Deixar de orientar</a></li>
+											<li><a href="#" ng-if="filter == 'without-teacher'" ng-click="setStudentTeacherId(student, false);">Orientar</a></li>
+											<li ng-if="filter == 'my'"><a href="#" ng-click="setStudentTeacherId(student, true)">Deixar de orientar</a></li>
 										</ul>
 									</div>
 								</td>

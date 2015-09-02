@@ -6,6 +6,10 @@ body {
 	margin-top: 40px;
 }
 
+.alert-dismissable .close, .alert-dismissible .close {
+	top: -3px;
+}
+
 .section-title {
 	font-weight: 800;
 	text-transform: uppercase;

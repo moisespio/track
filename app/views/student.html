@@ -1,0 +1,30 @@
+<div class="container student message">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<h4>{{ user.attributes.name }}</h4>
+					<h6>Usuário desde {{ user.createdAt | date : 'dd/MM/yyyy' }}</h6>
+					<hr>
+
+					<ul class="list-group">
+						<li class="list-group-item">
+							Matrícula: <strong>{{ user.attributes.username }}</strong>
+						</li>
+						<li class="list-group-item">
+							E-mail: <a ng-href="mailto:{{ user.attributes.email }}">{{ user.attributes.email }}</a>
+						</li>
+						<li class="list-group-item">
+							Orientador: {{ user.attributes.teacherId.attributes.name }}
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<a href="./students" class="btn btn-big btn-primary">Voltar</a>
+		</div>
+	</div>
+</div>

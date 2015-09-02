@@ -3,6 +3,19 @@ app.controller('userController', function($http, $rootScope, $scope, $location) 
 	$rootScope.error = false;
 	$rootScope.loading = false;
 
+	var notifications = new Parse.Query(Parse.Object.extend('Message'));
+	notifications.equalTo('receiverId', $rootScope.currentUser);
+	notifications.equalTo('unread', true);
+
+	notifications.find({
+		success: function(results) {
+			$rootScope.messagesCounter = results.length;
+		},
+		error: function(error) {
+			alert('Error when getting objects!');
+		}
+	});
+
 	$scope.login = function () {
 		$rootScope.error = false;
 		$rootScope.loading = true;

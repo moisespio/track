@@ -1,1 +1,22 @@
-awdad
+<div class="container message">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<h4>{{ message.attributes.subject }}</h4>
+					<h6>{{ message.createdAt | date : 'dd/MM/yyyy' }}</h6>
+					<hr>
+					<blockquote>
+						<p>{{ message.attributes.message }}</p>
+						<small>Enviado por {{ message.attributes.senderId.attributes.name }}</small>
+					</blockquote>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<a href="./messages" class="btn btn-big btn-primary">Voltar</a>
+		</div>
+	</div>
+</div>

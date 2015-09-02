@@ -1,0 +1,64 @@
+<form action="" ng-submit="update($event)">
+	<div class="container space">
+		<div class="row" ng-show="showSuccessMessage">
+			<div class="col-md-12">
+				<div class="alert alert-dismissible alert-success">
+					<button type="button" class="close" ng-click="showSuccessMessage = false">×</button>
+					Seus dados foram atualizados com sucesso
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-8">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Informações Básicas</h3>
+					</div>
+					<div class="panel-body">
+						<div class="form-group">
+							<label class="control-label" for="name">Nome</label>
+							<input type="text" class="form-control" ng-model="name" id="name">
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="email">E-mail</label>
+							<input type="text" class="form-control" ng-model="email" id="email">
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="username">
+								<span ng-if="!isTeacher">Matrícula</span>
+								<span ng-if="isTeacher">Usuário</span>
+							</label>
+							<input type="text" class="form-control" ng-model="username" id="username" readonly>
+						</div>
+						<div class="form-group" ng-if="!isTeacher">
+							<label class="control-label" for="teacher">Orientador</label>
+							<input type="text" class="form-control" ng-model="teacher" id="teacher" readonly>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Mudar Senha</h3>
+					</div>
+					<div class="panel-body">
+						<div class="form-group">
+							<label class="control-label" for="password">Nova senha</label>
+							<input type="password" class="form-control" ng-model="password" id="password">
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="confirm-password">Confirmar nova senha</label>
+							<input type="password" class="form-control" ng-model="confirmPassword" id="confirm-password">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<button class="btn btn-big btn-success">Salvar</button>
+			</div>
+		</div>
+	</div>
+</form>

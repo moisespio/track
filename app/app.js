@@ -31,14 +31,39 @@ app.config(function($routeProvider, $locationProvider) {
 		controller : 'studentsController'
 	})
 
+	.when('/groups', {
+		templateUrl : 'app/views/groups.html',
+		controller : 'groupsController'
+	})
+
 	.when('/notifications', {
 		templateUrl : 'app/views/notifications.html',
 		controller : 'notificationsController'
 	})
 
-	.when('/message', {
+	.when('/messages', {
+		templateUrl : 'app/views/messages.html',
+		controller : 'messagesController'
+	})
+
+	.when('/message/:id', {
 		templateUrl : 'app/views/message.html',
 		controller : 'messageController'
+	})
+
+	.when('/student/:id', {
+		templateUrl : 'app/views/student.html',
+		controller : 'studentController'
+	})
+
+	.when('/group/:id', {
+		templateUrl : 'app/views/group.html',
+		controller : 'groupController'
+	})
+
+	.when('/settings', {
+		templateUrl : 'app/views/settings.html',
+		controller : 'settingsController'
 	})
 
 	.otherwise ( { redirectTo: '/' } );
