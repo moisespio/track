@@ -8,7 +8,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-8">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h3 class="panel-title">Usuários do grupo <strong>{{ group.attributes.title }}</strong></h3>
@@ -38,6 +38,21 @@
 						</tbody>
 						<tfoot></tfoot>
 					</table>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Adicionar aluno ao grupo</h3>
+				</div>
+				<div class="panel-body">				
+					<div class="form-group">
+						<select class="form-control" ng-model="selectedUser" ng-options="user.attributes.name for user in students track by user.id" id="select"></select>
+					</div>
+
+					<button class="btn btn-big btn-primary" ng-click="add(selectedUser.id, selectedUser.attributes.name)">Adicionar</a>
 				</div>
 			</div>
 		</div>

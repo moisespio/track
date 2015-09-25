@@ -48,6 +48,20 @@ app.controller('messagesController', function($http, $rootScope, $scope, $locati
 			message.set('unread', true);
 
 			messages.push(message);
+			
+			Parse.Cloud.run('sendMail', {
+				to: selectedUsers[user].attributes.email,
+				from: $rootScope.currentUser.attributes.email,
+				subject: $scope.subject,
+				text: $scope.message
+			}, {
+				success: function(status) {
+					
+				},
+				error: function(error) {
+					console.log("error:", error)
+				}
+			});
 		}
 
 		Parse.Object.saveAll(messages, {

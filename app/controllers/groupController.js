@@ -1,6 +1,9 @@
 app.controller('groupController', function($http, $rootScope, $scope, $location, $routeParams) {
 	$rootScope.currentSection = 'groups';
 	$scope.showSuccessMessage = false;
+	$scope.selectedUser = new Array();
+	
+	var all = { id : '', attributes : { name : 'Selecione um aluno' } };
 
 	$scope.group;
 
@@ -60,4 +63,51 @@ app.controller('groupController', function($http, $rootScope, $scope, $location,
 			}
 		});
 	};
+	
+	$scope.add = function(id, name) {
+		Parse.Cloud.run('addUserToGroup', {
+			objectId: id,
+			groupId: $scope.group.id
+		}, {
+			success: function(status) {
+				$scope.$apply(function () {
+					$scope.successMessage = 'O(a) aluno(a) ' + name + ' foi adicionado ao grupo';
+					$scope.showSuccessMessage = true;
+				});
+
+				getUsers();
+			},
+			error: function(error) {
+				console.log("error:", error)
+			}
+		});
+	}
+	
+	var searchForStudents = function (currentFilter) {
+		$scope.students = new Array();
+
+		var query = new Parse.Query(Parse.User);
+		query.equalTo('teacherId', $rootScope.currentUser);
+
+		query.include('groupId');
+
+		query.find({
+			success: function(results) {
+				for (item in results) {	
+					$scope.$apply(function () {
+						if (item == 0) {
+							$scope.students.push(all);
+							$scope.selectedUser = all;
+						}
+						$scope.students.push(results[item]);
+					})
+				}
+			},
+			error:function(error) {
+				alert('Error when getting objects!');
+			}
+		});
+	};
+	
+	searchForStudents();
 });

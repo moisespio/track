@@ -1,4 +1,4 @@
-<div class="container-fluid well filter" ng-show="currentUser.attributes.type == 'teacher'">
+<div class="container-fluid well filter" ng-if="currentUser.attributes.type == 'teacher'">
 	<div class="container">
 		<div class="row">
 			<div class="form-group">
@@ -11,10 +11,50 @@
 	</div>
 </div>
 
+<form action="" ng-submit="save($event)" ng-if="currentUser.attributes.type == 'teacher'">
+	<div class="container timeline-share">
+		<div class="row" ng-show="showSuccessMessage">
+			<div class="col-md-12">
+				<div class="alert alert-dismissible alert-success">
+					<button type="button" class="close" ng-click="showSuccessMessage = false">×</button>
+					Conteúdo compartilhado com sucesso
+				</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Compartilhar</h3>
+					</div>
+					<div class="panel-body">
+						<div class="form-group">
+							<label class="control-label" for="subject">Assunto</label>
+							<input required type="text" class="form-control" ng-model="subject" id="subject" placeholder="Descreva em poucas palavras o assunto deste registro">
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="message">Descrição</label>
+							<textarea required class="form-control" ng-model="description" rows="3" id="message"></textarea>
+						</div>
+						<div class="form-group">
+							<div ngf-select="" ng-model="files" ngf-change="upload($files)" class="btn btn-sm btn-primary btn-upload" ngf-multiple="false">Selecionar Arquivo</div>
+							<span class="filename">{{ filename }}</span>
+						</div>
+						<div class="form-group">
+							<button class="btn btn-big btn-success">Publicar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
 <div class="container">
 	<ul class="timeline">
-		<li ng-repeat="post in posts | orderBy:'-createdAt' | filter:selectedUser.id" ng-class-even="'timeline-inverted'">
-			<div class="timeline-badge primary">
+		<li ng-repeat="post in posts | orderBy:'-createdAt' | filter: selectedUser.id" ng-class-even="'timeline-inverted'">
+			<div class="timeline-badge primary" ng-class="{ success : post.attributes.userId.id == $root.currentUser.id }">
 				<i class="glyphicon glyphicon-floppy-disk" ng-if="post.attributes.file"></i>
 				<i class="glyphicon glyphicon-align-left" ng-if="!post.attributes.file"></i>
 			</div>
@@ -24,7 +64,7 @@
 					<h4 class="timeline-title">{{ post.attributes.subject }}</h4>
 					<p>
 						<small class="text-muted user-name">
-							<i class="glyphicon glyphicon-user"></i> {{ post.attributes.userId.attributes.name }}
+							<a ng-href="./student/{{ post.attributes.userId.id }}"><i class="glyphicon glyphicon-user"></i> {{ post.attributes.userId.attributes.name }}</a>
 						</small>
 						<small class="text-muted">
 							<i class="glyphicon glyphicon-calendar"></i> {{ post.createdAt | date : 'dd/MM/yyyy' }}
@@ -39,11 +79,7 @@
 							<i class="glyphicon glyphicon-cog"></i> <span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">Action</a></li>
-							<li><a href="#">Another action</a></li>
-							<li><a href="#">Something else here</a></li>
-							<li class="divider"></li>
-							<li><a href="#">Separated link</a></li>
+							<li><a href="" ng-click="remove(post.id)">Remover</a></li>
 						</ul>
 					</div>
 					<a ng-if="post.attributes.file" href="{{ post.attributes.file._url }}" class="btn btn-sm btn-success pull-right" download="{{ post.attributes.file._name }}"><i class="glyphicon glyphicon-save"></i> Download</a>

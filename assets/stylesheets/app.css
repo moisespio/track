@@ -5957,6 +5957,10 @@ textarea {
   .timeline .user-name {
     margin-right: 20px; }
 
+.timeline-share .checkbox {
+  display: inline-block;
+  margin-right: 10px; }
+
 .timeline:before {
   top: 0;
   bottom: 0;
@@ -6151,3 +6155,6 @@ table td {
 
 .message {
   margin-top: 40px; }
+
+.new-student {
+  margin-bottom: 20px; }

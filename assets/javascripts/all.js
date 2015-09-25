@@ -68,41 +68,12 @@ app.config(function($routeProvider, $locationProvider) {
 
 	.otherwise ( { redirectTo: '/' } );
 });
-app.factory('notificationService', function ($http, $q) {
-	return {
-		send: function (senderId, receiverId, from, to, subject, message) {
-			Parse.Cloud.run('sendMail', {
-				from: from,
-				to: to,
-				subject: subject,
-				message: message,
-			}, {
-				success: function(status) {
-					console.log("status:", status);
-				},
-				error: function(error) {
-					console.log("error:", error);
-				}
-			});
-
-			var Message = Parse.Object.extend("Message");
-			var messageObject = new Message();
-
-			messageObject.set('subject', subject);
-			messageObject.set('message', message);
-			messageObject.set('senderId', senderId);
-			messageObject.set('receiverId', receiverId);
-			messageObject.set('unread', true);
-
-			messageObject.save();
-
-			return true;
-		}
-	};
-});
 app.controller('groupController', function($http, $rootScope, $scope, $location, $routeParams) {
 	$rootScope.currentSection = 'groups';
 	$scope.showSuccessMessage = false;
+	$scope.selectedUser = new Array();
+	
+	var all = { id : '', attributes : { name : 'Selecione um aluno' } };
 
 	$scope.group;
 
@@ -162,6 +133,53 @@ app.controller('groupController', function($http, $rootScope, $scope, $location,
 			}
 		});
 	};
+	
+	$scope.add = function(id, name) {
+		Parse.Cloud.run('addUserToGroup', {
+			objectId: id,
+			groupId: $scope.group.id
+		}, {
+			success: function(status) {
+				$scope.$apply(function () {
+					$scope.successMessage = 'O(a) aluno(a) ' + name + ' foi adicionado ao grupo';
+					$scope.showSuccessMessage = true;
+				});
+
+				getUsers();
+			},
+			error: function(error) {
+				console.log("error:", error)
+			}
+		});
+	}
+	
+	var searchForStudents = function (currentFilter) {
+		$scope.students = new Array();
+
+		var query = new Parse.Query(Parse.User);
+		query.equalTo('teacherId', $rootScope.currentUser);
+
+		query.include('groupId');
+
+		query.find({
+			success: function(results) {
+				for (item in results) {	
+					$scope.$apply(function () {
+						if (item == 0) {
+							$scope.students.push(all);
+							$scope.selectedUser = all;
+						}
+						$scope.students.push(results[item]);
+					})
+				}
+			},
+			error:function(error) {
+				alert('Error when getting objects!');
+			}
+		});
+	};
+	
+	searchForStudents();
 });
 app.controller('groupsController', function($http, $rootScope, $scope, $location) {
 	$rootScope.currentSection = 'groups';
@@ -302,6 +320,20 @@ app.controller('messagesController', function($http, $rootScope, $scope, $locati
 			message.set('unread', true);
 
 			messages.push(message);
+			
+			Parse.Cloud.run('sendMail', {
+				to: selectedUsers[user].attributes.email,
+				from: $rootScope.currentUser.attributes.email,
+				subject: $scope.subject,
+				text: $scope.message
+			}, {
+				success: function(status) {
+					
+				},
+				error: function(error) {
+					console.log("error:", error)
+				}
+			});
 		}
 
 		Parse.Object.saveAll(messages, {
@@ -691,21 +723,77 @@ app.controller('timelineController', function($http, $rootScope, $scope, $locati
 	$scope.posts = new Array();
 	$scope.users = new Array();
 	$scope.selectedUser = new Array();
+	$scope.showSuccessMessage = false;
 	$rootScope.currentSection = 'dashboard';
 
-	var all = { id : 0, attributes : { name : 'Todos' } };
+	var all = { id : '', username : '', attributes : { name : 'Todos' } };
 
 	$scope.$watch('selectedUser', function (selectedUser) {
 		console.log("selectedUser:", selectedUser);
 	});
+	
+	$scope.filename = null;
+	$scope.date = new Date();
+
+	var parseFile;
+
+	$scope.upload = function (files) {
+		if (files && files.length) {
+			$scope.$apply(function () {
+				$scope.filename = files[0].name;
+			});
+			parseFile = new Parse.File(files[0].name, files[0]);
+
+			parseFile.save().then(function() {
+			}, function(error) {
+				console.log("error:", error);
+			});
+		};
+	};
+
+	$scope.save = function ($event) {
+		var post = new Parse.Object("Post");
+
+		post.set('subject', this.subject);
+		post.set('description', this.description);
+		post.set('file', parseFile);
+		post.set('userId', $scope.currentUser);
+		post.save();
+		
+		this.subject = this.description = $scope.filename = '';
+
+		$scope.showSuccessMessage = true;
+		getPosts();
+		$event.preventDefault();
+	};
+	
+	$scope.remove = function (id) {
+		var Post = Parse.Object.extend("Post");
+		var query = new Parse.Query(Post);
+		
+		console.log(id);
+
+		query.get(id, {
+			success: function(post) {
+				post.destroy();
+				getPosts();
+			},
+			error: function(object, error) {
+
+			}
+		});
+	};
 
 	var posts = new Parse.Query(Parse.Object.extend('Post'));
 	var users = new Parse.Query(Parse.User);
 	posts.include('userId');
 
 	var getPosts = function () {
+		
 		posts.find({
-			success : function (results) {
+			success : function (results) {				
+				$scope.posts = [];
+				
 				for (item in results) {
 					$scope.$apply(function () {
 						$scope.posts.push(results[item]);
@@ -719,12 +807,17 @@ app.controller('timelineController', function($http, $rootScope, $scope, $locati
 	}
 
 	if($rootScope.currentUser.attributes.type == 'teacher') {
-		var students = new Array();
+		var students = new Parse.Query(Parse.User);
+		students.equalTo('teacherId', $rootScope.currentUser);
 
-		users.equalTo('teacherId', $rootScope.currentUser);
+		var teacher = new Parse.Query(Parse.User);
+		teacher.equalTo('objectId', $rootScope.currentUser.id);
 
-		users.find({
+		var query = Parse.Query.or(students, teacher);
+
+		query.find({
 			success : function (results) {
+				console.log(results);
 				for (item in results) {
 					$scope.$apply(function () {
 						if (item == 0) {
@@ -824,4 +917,37 @@ app.directive('keypress', function ($document, $rootScope) {
 			});
 		}
 	}
+});
+
+app.factory('notificationService', function ($http, $q) {
+	return {
+		send: function (senderId, receiverId, from, to, subject, message) {
+			Parse.Cloud.run('sendMail', {
+				from: from,
+				to: to,
+				subject: subject,
+				message: message,
+			}, {
+				success: function(status) {
+					console.log("status:", status);
+				},
+				error: function(error) {
+					console.log("error:", error);
+				}
+			});
+
+			var Message = Parse.Object.extend("Message");
+			var messageObject = new Message();
+
+			messageObject.set('subject', subject);
+			messageObject.set('message', message);
+			messageObject.set('senderId', senderId);
+			messageObject.set('receiverId', receiverId);
+			messageObject.set('unread', true);
+
+			messageObject.save();
+
+			return true;
+		}
+	};
 });
