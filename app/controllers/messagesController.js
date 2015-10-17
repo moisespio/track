@@ -48,15 +48,15 @@ app.controller('messagesController', function($http, $rootScope, $scope, $locati
 			message.set('unread', true);
 
 			messages.push(message);
-			
+
 			Parse.Cloud.run('sendMail', {
 				to: selectedUsers[user].attributes.email,
 				from: $rootScope.currentUser.attributes.email,
 				subject: $scope.subject,
-				text: $scope.message
+				message: $scope.message
 			}, {
 				success: function(status) {
-					
+
 				},
 				error: function(error) {
 					console.log("error:", error)
@@ -85,7 +85,9 @@ app.controller('messagesController', function($http, $rootScope, $scope, $locati
 	if ($rootScope.currentUser.attributes.type == 'teacher') {
 		query.equalTo('teacherId', $rootScope.currentUser);
 	} else {
-		query.equalTo('objectId', $rootScope.currentUser.attributes.teacherId.id);
+		if ($rootScope.currentUser.attributes.teacherId) {
+			query.equalTo('objectId', $rootScope.currentUser.attributes.teacherId.id);
+		}
 	}
 
 	query.find({

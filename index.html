@@ -29,6 +29,7 @@
 				<ul class="nav navbar-nav">
 					<li ng-class="{ 'active' : currentSection == 'dashboard' }"><a href="./timeline">Dashboard</a></li>
 					<li ng-class="{ 'active' : currentSection == 'new' }" ng-if="currentUser.attributes.type != 'teacher'"><a href="./new">Cadastrar</a></li>
+					<li ng-class="{ 'active' : currentSection == 'orientations' }"><a href="./orientations">Orientações</a></li>
 					<li ng-class="{ 'active' : currentSection == 'students' }" ng-if="currentUser.attributes.type == 'teacher'"><a href="./students">Alunos</a></li>
 					<li ng-class="{ 'active' : currentSection == 'groups' }" ng-if="currentUser.attributes.type == 'teacher'"><a href="./groups">Grupos</a></li>
 				</ul>
@@ -37,7 +38,7 @@
 					<li ng-class="{ 'active' : currentSection == 'messages' }"><a href="./messages">Mensagens <span class="badge" ng-if="messagesCounter">{{ messagesCounter }}</span></a></li>
 					<!-- <li ng-class="{ 'active' : currentSection == 'notifications' }"><a href="./notifications">Notificações <span class="badge">{{ messagesCounter }}</span></a></li> -->
 					<li ng-class="{ 'active' : currentSection == 'settings' }"><a href="./settings">Configurações</a></li>
-					<li ng-class="{ 'active' : currentSection == 'new' }"><a href="./new">Cadastrar</a></li>
+					<li><a href="" ng-click="logout()">Sair</a></li>
 				</ul>
 			</div>
 		</div>

@@ -1,0 +1,107 @@
+<form action="" ng-submit="save($event)" ng-if="currentUser.attributes.type == 'teacher'">
+	<div class="container space">
+		<div class="row" ng-show="showSuccessMessage">
+			<div class="col-md-12">
+				<div class="alert alert-dismissible alert-success">
+					<button type="button" class="close" ng-click="showSuccessMessage = false">×</button>
+					Orientação agendada com sucesso.
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Agendar Orientação</h3>
+					</div>
+					<div class="panel-body">
+						<div class="form-group">
+							<label class="control-label" for="date">Data</label>
+							<input type="text" class="form-control datepicker" id="date" name="date" placeholder="DD/MM/AAAA" data-mask="00/00/0000">
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="student">Aluno</label>
+							<select class="form-control" ng-model="student" name="student" ng-options="user.attributes.name for user in users track by user.id" id="student">
+							</select>
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="date">Local</label>
+							<input type="text" class="form-control" id="location" name="location" placeholder="Ex.: sala 501" ng-model="location">
+						</div>
+					</div>
+				</div>
+
+				<button class="btn btn-big btn-success">Agendar</button>
+			</div>
+			<div class="col-sm-8">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Próximas Orientações</h3>
+					</div>
+					<div class="panel-body">
+						<table class="table table-striped table-hover">
+							<thead>
+								<tr>
+									<th>Data</th>
+									<th>Aluno</th>
+									<th>Local</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="orientation in orientations">
+									<td>{{ orientation.attributes.date | date : 'dd/MM/yyyy'}}</td>
+									<td>{{ orientation.attributes.studentId.attributes.name }}</td>
+									<td>{{ orientation.attributes.location }}</td>
+									<td>
+										<span class="label label-success" ng-if="orientation.attributes.confirmed">Confirmado</span>
+										<span class="label label-warning" ng-if="!orientation.attributes.confirmed">Pendente</span>
+									</td>
+								</tr>
+							</tbody>
+							<tfoot></tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+<!-- ######################################################### -->
+
+<div class="container space" ng-if="currentUser.attributes.type != 'teacher'">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Orientações</h3>
+				</div>
+				<div class="panel-body">
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th>Data</th>
+								<th>Aluno</th>
+								<th>Local</th>
+								<th>Ações</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="orientation in orientations">
+								<td>{{ orientation.attributes.date | date : 'dd/MM/yyyy'}}</td>
+								<td>{{ orientation.attributes.studentId.attributes.name }}</td>
+								<td>{{ orientation.attributes.location }}</td>
+								<td>
+									<span class="label label-primary" ng-if="orientation.attributes.confirmed">Confirmado</span>
+									<button class="btn btn-sm btn-success" ng-if="!orientation.attributes.confirmed" ng-click="confirm(orientation.id, orientation.attributes.date)">Confirmar</button>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot></tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

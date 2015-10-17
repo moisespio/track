@@ -21,7 +21,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-default">
@@ -52,7 +52,8 @@
 </form>
 
 <div class="container">
-	<ul class="timeline">
+	<p class="lead empty" ng-if="posts.length == 0">Sua timeline está vazia! Comece <a href="./new">cadastrando algo</a>.</p>
+	<ul class="timeline" ng-if="posts.length > 0">
 		<li ng-repeat="post in posts | orderBy:'-createdAt' | filter: selectedUser.id" ng-class-even="'timeline-inverted'">
 			<div class="timeline-badge primary" ng-class="{ success : post.attributes.userId.id == $root.currentUser.id }">
 				<i class="glyphicon glyphicon-floppy-disk" ng-if="post.attributes.file"></i>

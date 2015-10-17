@@ -2,7 +2,7 @@ app.controller('groupController', function($http, $rootScope, $scope, $location,
 	$rootScope.currentSection = 'groups';
 	$scope.showSuccessMessage = false;
 	$scope.selectedUser = new Array();
-	
+
 	var all = { id : '', attributes : { name : 'Selecione um aluno' } };
 
 	$scope.group;
@@ -63,7 +63,7 @@ app.controller('groupController', function($http, $rootScope, $scope, $location,
 			}
 		});
 	};
-	
+
 	$scope.add = function(id, name) {
 		Parse.Cloud.run('addUserToGroup', {
 			objectId: id,
@@ -82,7 +82,7 @@ app.controller('groupController', function($http, $rootScope, $scope, $location,
 			}
 		});
 	}
-	
+
 	var searchForStudents = function (currentFilter) {
 		$scope.students = new Array();
 
@@ -93,7 +93,7 @@ app.controller('groupController', function($http, $rootScope, $scope, $location,
 
 		query.find({
 			success: function(results) {
-				for (item in results) {	
+				for (item in results) {
 					$scope.$apply(function () {
 						if (item == 0) {
 							$scope.students.push(all);
@@ -108,6 +108,6 @@ app.controller('groupController', function($http, $rootScope, $scope, $location,
 			}
 		});
 	};
-	
+
 	searchForStudents();
 });

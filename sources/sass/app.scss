@@ -2,6 +2,7 @@
 @import "mixins";
 @import "animations";
 @import "bootstrap";
+@import "datepicker";
 
 @import "base/common";
 
@@ -14,4 +15,9 @@
 
 .new-student {
 	margin-bottom: 20px;
+}
+
+.empty {
+	text-align: center;
+	margin-top: 80px;
 }

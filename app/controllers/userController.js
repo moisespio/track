@@ -24,7 +24,7 @@ app.controller('userController', function($http, $rootScope, $scope, $location) 
 			success: function(user) {
 				$rootScope.currentUser = Parse.User.current();
 				$rootScope.loading = false;
-				$location.path('/timeline');
+				location.reload();
 			},
 			error: function(user, error) {
 				$scope.$apply(function () {
@@ -50,18 +50,16 @@ app.controller('userController', function($http, $rootScope, $scope, $location) 
 		user.set('username', this.username);
 		user.set('password', this.password);
 		user.set('email', this.email);
-		user.set('registration', this.registration);
+		user.set('name', this.name);
 		user.set('type', 'student');
 
 		user.signUp(null, {
 			success: function(user) {
-				$location.path('/timeline');
+				location.reload();
 			},
 			error: function(user, error) {
-				$scope.$apply(function () {
-					$rootScope.error = true;
-					$rootScope.loading = false;
-				})
+				$rootScope.error = true;
+				$rootScope.loading = false;
 			}
 		});
 	};

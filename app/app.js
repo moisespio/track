@@ -26,6 +26,11 @@ app.config(function($routeProvider, $locationProvider) {
 		controller : 'newController'
 	})
 
+	.when('/orientations', {
+		templateUrl : 'app/views/orientations.html',
+		controller : 'orientationsController'
+	})
+
 	.when('/students', {
 		templateUrl : 'app/views/students.html',
 		controller : 'studentsController'

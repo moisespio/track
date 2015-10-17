@@ -103,18 +103,17 @@ Parse.Cloud.define('addUserToGroup', function(request, response) {
 		response.error('Not an Teacher.')
 		return;
 	}
-	
+
 	var group;
 
 	Parse.Cloud.useMasterKey();
-	
+
 	var query = new Parse.Query(Parse.Object.extend('Group'));
 
 	query.equalTo('objectId', request.params.groupId);
 
 	query.find({
 		success: function(results) {
-			
 			group = results[0];
 			saveGroup();
 		},
@@ -122,15 +121,15 @@ Parse.Cloud.define('addUserToGroup', function(request, response) {
 			alert('Error when getting objects!');
 		}
 	});
-	
+
 	var saveGroup = function () {
 		var query = new Parse.Query(Parse.User);
 		query.equalTo('objectId', request.params.objectId);
-	
+
 		query.first({
 			success: function(user) {
 				user.set('groupId', group);
-	
+
 				user.save(null, {
 					success: function(user) {
 						response.success('Successfully updated user.');
@@ -143,6 +142,6 @@ Parse.Cloud.define('addUserToGroup', function(request, response) {
 			error: function(error) {
 				response.error('Could not find user.');
 			}
-		});	
+		});
 	}
 });
