@@ -48,10 +48,6 @@
 											<i class="glyphicon glyphicon-cog"></i> <span class="caret"></span>
 										</button>
 										<ul class="dropdown-menu" role="menu">
-											<li><a href="#">Ver histórico</a></li>
-											<li><a href="#">Enviar notificação</a></li>
-											<li><a href="#" ng-if="filter == 'my'">Desativar</a></li>
-											<li class="divider"></li>
 											<li><a href="#" ng-if="filter == 'without-teacher'" ng-click="setStudentTeacherId(student, false);">Orientar</a></li>
 											<li ng-if="filter == 'my'"><a href="#" ng-click="setStudentTeacherId(student, true)">Deixar de orientar</a></li>
 										</ul>

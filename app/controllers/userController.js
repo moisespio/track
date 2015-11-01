@@ -51,7 +51,7 @@ app.controller('userController', function($http, $rootScope, $scope, $location) 
 		user.set('password', this.password);
 		user.set('email', this.email);
 		user.set('name', this.name);
-		user.set('type', 'student');
+		user.set('type', this.type);
 
 		user.signUp(null, {
 			success: function(user) {

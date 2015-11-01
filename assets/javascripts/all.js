@@ -789,6 +789,8 @@ app.controller('orientationsController', function($http, $rootScope, $scope, $lo
 	}
 });
 app.controller('registerController', function($http, $rootScope, $scope, $location) {
+	$scope.type = "student"
+
 	if (Parse.User.current()) {
 		$location.path('/timeline');
 	}
@@ -900,7 +902,7 @@ app.controller('studentsController', function($http, $rootScope, $scope, $locati
 		});
 	};
 });
-app.controller('timelineController', function($http, $rootScope, $scope, $location) {
+app.controller('timelineController', function($http, $rootScope, $scope, $location, $timeout) {
 	if (!$rootScope.currentUser) $location.path('/login');
 
 	$scope.posts = new Array();
@@ -909,11 +911,8 @@ app.controller('timelineController', function($http, $rootScope, $scope, $locati
 	$scope.showSuccessMessage = false;
 	$rootScope.currentSection = 'dashboard';
 
-	var all = { id : '', username : '', attributes : { name : 'Todos' } };
-
-	$scope.$watch('selectedUser', function (selectedUser) {
-		console.log("selectedUser:", selectedUser);
-	});
+	var all = { id : null, username : '', attributes : { name : 'Alunos' } };
+	var allGroups = { id : null, username : '', attributes : { title : 'Grupos' } };
 	
 	$scope.filename = null;
 	$scope.date = new Date();
@@ -967,6 +966,30 @@ app.controller('timelineController', function($http, $rootScope, $scope, $locati
 		});
 	};
 
+	function getGroups() {
+		$scope.groups = new Array();
+		var Group = Parse.Object.extend("Group");
+		var groups = new Parse.Query(Group);
+		groups.equalTo('userId', $rootScope.currentUser);
+
+		groups.find({
+			success: function(results) {
+				for (item in results) {
+					$scope.$apply(function () {
+						if (item == 0) {
+							$scope.groups.push(allGroups);
+							$scope.selectedGroup = allGroups;
+						}
+						$scope.groups.push(results[item]);
+					})
+				}
+			},
+			error: function(error) {
+				alert("Error: " + error.code + " " + error.message);
+			}
+		});
+	}
+
 	var posts = new Parse.Query(Parse.Object.extend('Post'));
 	var users = new Parse.Query(Parse.User);
 	posts.include('userId');
@@ -982,6 +1005,8 @@ app.controller('timelineController', function($http, $rootScope, $scope, $locati
 						$scope.posts.push(results[item]);
 					})
 				}
+
+				loadOrientations()
 			},
 			error : function (error) {
 				alert('Error when getting objects!');
@@ -989,7 +1014,31 @@ app.controller('timelineController', function($http, $rootScope, $scope, $locati
 		});
 	}
 
+	var loadOrientations = function () {
+		var query = new Parse.Query(Parse.Object.extend("Orientation"));
+		query.equalTo("teacherId", $rootScope.currentUser);
+		query.include('teacherId');
+		query.include('studentId');
+
+		query.find({
+			success: function(results) {
+				console.log("jjjjj:", results);
+				for (item in results) {
+					$scope.posts.push(results[item]);
+				}
+
+				$scope.$apply(function () {
+					$scope.orientations = results;
+				})
+			},
+			error: function(error) {
+				alert("Error: " + error.code + " " + error.message);
+			}
+		});
+	}
+
 	if($rootScope.currentUser.attributes.type == 'teacher') {
+
 		var students = new Parse.Query(Parse.User);
 		students.equalTo('teacherId', $rootScope.currentUser);
 
@@ -1000,7 +1049,6 @@ app.controller('timelineController', function($http, $rootScope, $scope, $locati
 
 		query.find({
 			success : function (results) {
-				console.log(results);
 				for (item in results) {
 					$scope.$apply(function () {
 						if (item == 0) {
@@ -1017,9 +1065,19 @@ app.controller('timelineController', function($http, $rootScope, $scope, $locati
 			error : function (error) {
 				alert('Error when getting objects!');
 			}
-		})
+		});
+
+		getGroups();
 	} else {
-		posts.equalTo('userId', $rootScope.currentUser);
+		var userPosts = new Parse.Query("Post")
+		userPosts.equalTo('userId', $rootScope.currentUser)
+
+		var teacherPosts = new Parse.Query("Post")
+		teacherPosts.equalTo('userId', $rootScope.currentUser.attributes.teacherId);
+
+		posts = Parse.Query.or(userPosts, teacherPosts)
+		posts.include('userId');
+
 		getPosts();
 	}
 });
@@ -1076,7 +1134,7 @@ app.controller('userController', function($http, $rootScope, $scope, $location) 
 		user.set('password', this.password);
 		user.set('email', this.email);
 		user.set('name', this.name);
-		user.set('type', 'student');
+		user.set('type', this.type);
 
 		user.signUp(null, {
 			success: function(user) {
