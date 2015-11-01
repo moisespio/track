@@ -79,7 +79,7 @@ app.controller('orientationsController', function($http, $rootScope, $scope, $lo
 				to: studentObj.attributes.email,
 				from: $rootScope.currentUser.attributes.email,
 				subject: 'Agendamento de Orientação',
-				message: 'Olá ' + studentObj.attributes.name + '. Gostaria de agendar uma orientação no dia ' + dateObj.getDate() + '/' + dateObj.getMonth() + '/' + dateObj.getFullYear() + '. Para aceitar, clique aqui.'
+				message: 'Olá ' + studentObj.attributes.name + '. Gostaria de agendar uma orientação no dia ' + dateObj.getDate() + '/' + dateObj.getMonth() + '/' + dateObj.getFullYear() + '.'
 			}, {
 				success: function(status) {
 					$scope.$apply(function () {

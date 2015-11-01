@@ -73,17 +73,6 @@ app.config(function($routeProvider, $locationProvider) {
 
 	.otherwise ( { redirectTo: '/' } );
 });
-app.directive('keypress', function ($document, $rootScope) {
-	return {
-		restrict: 'A',
-		link: function () {
-			$document.bind('keypress', function (e) {
-				$rootScope.$broadcast('keypress', e, String.fromCharCode(e.which));
-			});
-		}
-	}
-});
-
 app.controller('groupController', function($http, $rootScope, $scope, $location, $routeParams) {
 	$rootScope.currentSection = 'groups';
 	$scope.showSuccessMessage = false;
@@ -704,7 +693,7 @@ app.controller('orientationsController', function($http, $rootScope, $scope, $lo
 				to: studentObj.attributes.email,
 				from: $rootScope.currentUser.attributes.email,
 				subject: 'Agendamento de Orientação',
-				message: 'Olá ' + studentObj.attributes.name + '. Gostaria de agendar uma orientação no dia ' + dateObj.getDate() + '/' + dateObj.getMonth() + '/' + dateObj.getFullYear() + '. Para aceitar, clique aqui.'
+				message: 'Olá ' + studentObj.attributes.name + '. Gostaria de agendar uma orientação no dia ' + dateObj.getDate() + '/' + dateObj.getMonth() + '/' + dateObj.getFullYear() + '.'
 			}, {
 				success: function(status) {
 					$scope.$apply(function () {
@@ -1147,6 +1136,17 @@ app.controller('userController', function($http, $rootScope, $scope, $location) 
 		});
 	};
 });
+app.directive('keypress', function ($document, $rootScope) {
+	return {
+		restrict: 'A',
+		link: function () {
+			$document.bind('keypress', function (e) {
+				$rootScope.$broadcast('keypress', e, String.fromCharCode(e.which));
+			});
+		}
+	}
+});
+
 app.factory('notificationService', function ($http, $q) {
 	return {
 		send: function (senderId, receiverId, from, to, subject, message) {
